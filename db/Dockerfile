@@ -1,0 +1,5 @@
+FROM postgres:9.6
+
+ADD create.sql /docker-entrypoint-initdb.d
+
+RUN chmod 777 /var/lib/postgresql/data

@@ -1,0 +1,48 @@
+version: '2.1'
+
+services:
+  db:
+    container_name: swgoh-db
+    build:
+      context: ./db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - swgoh_pgsql_data:/var/lib/postgresql/data:z
+    healthcheck:
+      test: exit 0
+
+  manage:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    entrypoint: python manage.py
+    environment:
+      - DJANGO_READ_DOT_ENV_FILE=False
+      - DJANGO_DEBUG=True
+      - DATABASE_URL=psql://postgres:postgres@db:5432/swgoh
+
+  migrate:
+    extends:
+      service: manage
+    command: migrate
+    healthcheck:
+      test: exit 0
+
+  app:
+    container_name: swgoh-app
+    extends:
+      service: manage
+    command: runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    links:
+      - db
+
+volumes:
+  swgoh_pgsql_data:
