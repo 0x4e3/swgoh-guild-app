@@ -52,6 +52,8 @@ THIRD_PARTY_APPS = [
 # Apps specific for this project go here.
 LOCAL_APPS = [
     'swgoh.users.apps.UsersConfig',
+    'swgoh.guilds.apps.GuildsAppConfig',
+    'swgoh.units.apps.UnitsAppConfig',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
